@@ -5,9 +5,14 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 /**
+ * Class containing methods for recursive printing Java objects.
+ *
  * Created by adam on 31.01.18.
  */
 public class ToStringUtils {
+
+    //todo: add support for collection in with objects with no toStringMethod
+    //todo: if class is anonymous
 
     private Set<Object> printedObjects = new HashSet<>();
 
@@ -26,6 +31,12 @@ public class ToStringUtils {
         return hasToString;
     }
 
+    /**
+     * Returns recursive string representation of an object.
+     *
+     * @param object object for witch we want to produce string representation
+     * @return string representation of an object
+     */
     public String toString(Object object) {
         printedObjects = new HashSet<>();
         String result = toString1(object);
@@ -33,8 +44,6 @@ public class ToStringUtils {
     }
 
     private String toString1(Object object) {
-
-        //todo: if class is anonymous
 
         if (object == null) {
             return "null";
