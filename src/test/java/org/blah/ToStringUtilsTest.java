@@ -22,9 +22,14 @@ package org.blah;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
+ * Test suite for ToStringUtils class
+ *
  * Created by adam on 31.01.18.
  */
 public class ToStringUtilsTest {
@@ -255,6 +260,70 @@ public class ToStringUtilsTest {
         String string = t.toString(new A10());
         Assert.assertEquals(
                 "A10(0){a=A10[A10(0),null,];a1=A2(0){a=A2(0)};a11=A2(1){a=A2(1)};a111=A2(1)}",
+                string
+        );
+
+    }
+
+    @Test
+    public void listTest() {
+
+        ToStringUtils t = new ToStringUtils();
+
+        List<A1> l = new ArrayList<>();
+        l.add(new A1()); l.add(new A1()); l.add(new A1());
+
+        String string = t.toString(l);
+        Assert.assertEquals(
+                "A10(0){a=A10[A10(0),null,];a1=A2(0){a=A2(0)};a11=A2(1){a=A2(1)};a111=A2(1)}",
+                string
+        );
+
+    }
+
+    @Test
+    public void linkedListTest() {
+
+        ToStringUtils t = new ToStringUtils();
+
+        List<A1> l = new LinkedList<>();
+        l.add(new A1()); l.add(new A1()); l.add(new A1());
+
+        String string = t.toString(l);
+        Assert.assertEquals(
+                "A10(0){a=A10[A10(0),null,];a1=A2(0){a=A2(0)};a11=A2(1){a=A2(1)};a111=A2(1)}",
+                string
+        );
+
+    }
+
+
+    private class O {
+        private int i = 1;
+    }
+
+    @Test
+    public void simpleTypeTest() {
+
+        ToStringUtils t = new ToStringUtils();
+
+        int i = 1;
+        String string = t.toString(i);
+        Assert.assertEquals(
+                "1",
+                string
+        );
+
+    }
+
+    @Test
+    public void simpleTypeFieldTest() {
+
+        ToStringUtils t = new ToStringUtils();
+
+        String string = t.toString(new O());
+        Assert.assertEquals(
+                "O(0){i=1}",
                 string
         );
 

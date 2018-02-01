@@ -42,6 +42,10 @@ public class ToStringUtils {
     private boolean hasToString(Class clazz) {
         boolean hasToString = false;
 
+        if (clazz.isPrimitive()) {
+            return false;
+        }
+
         try {
             Class otherClass = clazz.getMethod("toString").getDeclaringClass();
             hasToString = otherClass.getCanonicalName().equals(clazz.getCanonicalName());
@@ -79,6 +83,9 @@ public class ToStringUtils {
 
         if (hasToString(clazz))
             return object.toString();
+
+        if (clazz.isPrimitive())
+            return "" + object;
 
         ToStringBuilder builder = new ToStringBuilder().setClass(clazz.getSimpleName() + "(" + id +")");
 
@@ -162,6 +169,8 @@ public class ToStringUtils {
             return -1;
         if (value == null)
             return -2;
+        if (clazz.isPrimitive())
+            return -3;
         if (!printedObjects.contains(value)) {
             addObject(value, clazz);
         }
