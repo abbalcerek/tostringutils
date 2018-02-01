@@ -39,6 +39,7 @@ public class ToStringUtilsTest {
         String string = new ToStringUtils().toString(o);
         String string1 = new ToStringUtils().toString(t);
         System.out.println(t.getClass().getSuperclass());
+        System.out.println(t.getClass().getInterfaces());
 
         System.out.println(string1);
         System.out.println(Arrays.toString(o.getClass().getClasses()));
@@ -66,7 +67,7 @@ public class ToStringUtilsTest {
     @Test
     public void objectArray3Test() {
         String string = new ToStringUtils().toString(new D[]{new E(), new F()});
-        Assert.assertEquals("D[E{},F{},]", string);
+        Assert.assertEquals("D[E(0){},F(0){},]", string);
     }
 
 
@@ -123,7 +124,7 @@ public class ToStringUtilsTest {
     @Test
     public void nestedObjectTest() {
         String string = new ToStringUtils().toString(new A2());
-        Assert.assertEquals("A2{a=A2(Cyclic reference)}", string);
+        Assert.assertEquals("A2(0){a=A2(0)}", string);
     }
 
     class A3 {
@@ -134,7 +135,7 @@ public class ToStringUtilsTest {
     @Test
     public void twoNestedObjectTest() {
         String string = new ToStringUtils().toString(new A3());
-        Assert.assertEquals("A3{a=A3(Cyclic reference);a1=A3(Cyclic reference)}", string);
+        Assert.assertEquals("A3(0){a=A3(0);a1=A3(0)}", string);
     }
 
     class C {}
@@ -234,7 +235,7 @@ public class ToStringUtilsTest {
 
         String string = t.toString(new A10());
         Assert.assertEquals(
-                "A10{a=A10[A10(Cyclic reference),null,];a1=A2{a=A2(Cyclic reference)};a11=A2{a=A2(Cyclic reference)};a111=A2(Cyclic reference)}",
+                "A10(0){a=A10[A10(0),null,];a1=A2(0){a=A2(0)};a11=A2(1){a=A2(1)};a111=A2(1)}",
                 string
         );
 

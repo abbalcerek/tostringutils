@@ -34,16 +34,14 @@ public class ToStringUtils {
 
     private String toString1(Object object) {
 
-        //todo: if class is an array
         //todo: if class is anonymous
 
         if (object == null) {
             return "null";
         }
 
-        printedObjects.add(object);
-
         Class clazz = object.getClass();
+        int id = objectId(object, clazz);
 
         if (clazz.isArray()) {
             return arrayToString(object, clazz);
@@ -52,7 +50,7 @@ public class ToStringUtils {
         if (hasToString(clazz))
             return object.toString();
 
-        ToStringBuilder builder = new ToStringBuilder().setClass(clazz.getSimpleName());
+        ToStringBuilder builder = new ToStringBuilder().setClass(clazz.getSimpleName() + "(" + id +")");
 
         for (Field f: object.getClass().getDeclaredFields()) {
 
@@ -72,12 +70,12 @@ public class ToStringUtils {
                 if (hasToString) {
                     builder.addKeyValue(name, value.toString());
                 } else if (printedObjects.contains(value)) {
-                    builder.addKeyValue(name, fieldClass.getSimpleName() + "(Cyclic reference)");
+                    builder.addKeyValue(name, fieldClass.getSimpleName() + "(" + objectId(value, fieldClass) + ")");
                 } else if (isArray(fieldClass)) {
                     String res = arrayToString(value, fieldClass);
                     builder.addKeyValue(name, res);
                 } else {
-                    printedObjects.add(object);
+                    objectId(value, fieldClass);
                     builder.addKeyValue(name, toString1(value));
 
                 }
@@ -98,9 +96,10 @@ public class ToStringUtils {
             Object element = Array.get(value, i);
 
             if (printedObjects.contains(element)) {
-                res += element.getClass().getSimpleName() + "(Cyclic reference),";
+                res += element.getClass().getSimpleName() + "(" + objectId(element, element.getClass()) + "),";
             } else {
-                printedObjects.add(element);
+                if (element != null)
+                    objectId(element, element.getClass());
                 res += toString1(element) + ",";
             }
 
@@ -115,6 +114,28 @@ public class ToStringUtils {
 
     private void putOnMap() {
         
+    }
+
+    private void addObject(Object value, Class clazz) {
+        printedObjects.add(value);
+        if (idMap.containsKey(clazz)) {
+            idMap.get(clazz).add(value);
+        } else {
+            List<Object> values = new ArrayList<>();
+            values.add(value);
+            idMap.put(clazz, values);
+        }
+    }
+
+    private Integer objectId(Object value, Class clazz) {
+        if (clazz.isArray())
+            return -1;
+        if (value == null)
+            return -2;
+        if (!printedObjects.contains(value)) {
+            addObject(value, clazz);
+        }
+        return idMap.get(clazz).indexOf(value);
     }
 
 
